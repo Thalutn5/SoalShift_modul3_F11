@@ -46,7 +46,7 @@ void* rubahfile(void *temp){
     int file=*((int*)temp);
     char command[50];
     char command2[50];
-
+    
     if(file ==1)
     {
 	status++;
@@ -80,7 +80,7 @@ int main(){
 			fprintf(stderr,"Error - pthread_create() return code: %d\n",d);
 			exit(EXIT_FAILURE);
 		}
-	pthread_join(tid1, NULL);
+    pthread_join(tid1, NULL);
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     int b = pthread_create( &tid2, NULL, rubahzip, (void*) p);
     if(b!=0){
@@ -93,7 +93,8 @@ int main(){
 			fprintf(stderr,"Error - pthread_create() return code: %d\n",e);
 			exit(EXIT_FAILURE);
 		}
-    pthread_join(tid2, NULL);   
+    pthread_join(tid2, NULL);
+
     ///////////////////////////////////////////////////////////////////////////
     int c = pthread_create( &tid3, NULL, rubahfile, (void*) p);
     if(c!=0){
