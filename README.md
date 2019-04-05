@@ -187,6 +187,7 @@ Jawab :
 			{
 				printf("Fitur Agmal Ayo Bangun Disabled 10 s\n"); //akan mengeluarkan pesan 
 				sleep(10); // dan sleep selama 10 detik
+				trigger=0;
 				counter2=0;
 			}
 - Didalam fungsi tidurraj kita membuat looping dengan while, isi dari while tersebut adalah
@@ -201,6 +202,7 @@ Jawab :
 		{
 			printf("Fitur Iraj Ayo Tidur Disabled 10 s\n");//akan mengeluarkan pesan 
 			sleep(10); // dan sleep selama 10 detik
+			trigger2=0;
 			counter=0;
 		}
 		
