@@ -15,7 +15,7 @@ void* printstok(void* argc){
 	int num;
 	while(1){
 		//num=*(int*)argc;
-		printf("Stok yang tersedia adalah %d\n", *stok);
+		//printf("Stok yang tersedia adalah %d\n", *stok);
 		sleep(5);
 	}
 }
