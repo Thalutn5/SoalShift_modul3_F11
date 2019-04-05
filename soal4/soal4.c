@@ -51,12 +51,14 @@ void* rubahfile(void *temp){
     {
 	status++;
 	while(status!=6);
+	sleep(15);
         system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses1/; unzip KompresProses1.zip");
     }
     else if(file == 2)
     {
 	status++;
 	while(status!=6);
+	sleep(15);
         system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses2/; unzip KompresProses2.zip");
     }
 }
@@ -91,9 +93,7 @@ int main(){
 			fprintf(stderr,"Error - pthread_create() return code: %d\n",e);
 			exit(EXIT_FAILURE);
 		}
-    pthread_join(tid2, NULL);
-	pthread_join(tid5, NULL);    
-	sleep(15);	
+    pthread_join(tid2, NULL);   
     ///////////////////////////////////////////////////////////////////////////
     int c = pthread_create( &tid3, NULL, rubahfile, (void*) p);
     if(c!=0){
