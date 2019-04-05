@@ -8,8 +8,6 @@ int status;
 
 void* masukinaux(void *temp){
     int file=*((int*)temp);
-    char command[50];
-    char command2[50];
     if(file ==1)
     {
 	status++;
@@ -25,8 +23,6 @@ void* masukinaux(void *temp){
 }
 void* rubahzip(void *temp){
     int file=*((int*)temp);
-    char command[50];
-    char command2[50];
     if(file ==1)
     {
 	status++;
@@ -43,10 +39,7 @@ void* rubahzip(void *temp){
     }
 }
 void* rubahfile(void *temp){
-    int file=*((int*)temp);
-    char command[50];
-    char command2[50];
-    
+    int file=*((int*)temp);    
     if(file ==1)
     {
 	status++;
