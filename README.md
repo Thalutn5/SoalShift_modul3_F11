@@ -175,6 +175,40 @@ Jawab :
 				trigger2 = 1;
 				usleep(500);
 			}
-- Didalam fungsi Bangunmal
+- Didalam fungsi Bangunmal kita membuat looping dengan while, isi dari while tersebut adalah
+
+		if(trigger == 1) //jika triggernya 1 maka masuk kedalam if ini yang bertujuan untuk menaikkan nilai dari WakeUp_Status
+		{
+			WakeUp_Status = WakeUp_Status + 15;
+			counter++; //agar bisa menilai bahwa if ini sudah berapa kali dilakukan
+			trigger = 0;
+		}
+		if(counter2 == 3) //jika counter2 atau fungsi tidurraj sudah dijalankan 3 kali maka akan memasuki if ini
+			{
+				printf("Fitur Agmal Ayo Bangun Disabled 10 s\n"); //akan mengeluarkan pesan 
+				sleep(10); // dan sleep selama 10 detik
+				counter2=0;
+			}
+- Didalam fungsi tidurraj kita membuat looping dengan while, isi dari while tersebut adalah
+
+		if(trigger2 == 1)//jika trigger2nya 1 maka masuk kedalam if ini yang bertujuan untuk mengurangi nilai dari Spirit_Status
+		{
+			Spirit_Status = Spirit_Status - 20;
+			counter2++;
+			trigger2 = 0;
+		}
+		if(counter == 3) //jika counter atau fungsi bangunmal sudah dijalankan 3 kali maka akan memasuki if ini
+		{
+			printf("Fitur Iraj Ayo Tidur Disabled 10 s\n");
+			sleep(10);
+			counter=0;
+		}
+		
+- Dan tidak lupa untuk menjoinkan kedua thread tadi pada fungsi utamanya
+
+		pthread_join(tid[0],NULL);
+		pthread_join(tid[1],NULL);
+# Nomor 4
+
 
 
