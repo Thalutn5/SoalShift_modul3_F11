@@ -73,7 +73,7 @@ int main(){
 			fprintf(stderr,"Error - pthread_create() return code: %d\n",d);
 			exit(EXIT_FAILURE);
 		}
-    pthread_join(tid1, NULL);
+	pthread_join(tid1, NULL);
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     int b = pthread_create( &tid2, NULL, rubahzip, (void*) p);
     if(b!=0){
