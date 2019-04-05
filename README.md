@@ -199,8 +199,8 @@ Jawab :
 		}
 		if(counter == 3) //jika counter atau fungsi bangunmal sudah dijalankan 3 kali maka akan memasuki if ini
 		{
-			printf("Fitur Iraj Ayo Tidur Disabled 10 s\n");
-			sleep(10);
+			printf("Fitur Iraj Ayo Tidur Disabled 10 s\n");//akan mengeluarkan pesan 
+			sleep(10); // dan sleep selama 10 detik
 			counter=0;
 		}
 		
@@ -219,7 +219,119 @@ Dengan Syarat :
 - Boleh menggunakan system
 Jawab :
 
+- Pertama-tama kita membuat sebuah variabel global bernama status 
 
+		int status;
+	
+- Setelah itu didalam fungsi utamanya kami mendeklarasikan beberapa variabel seperti variabel dibawah ini :
+
+		 pthread_t tid1, tid2, tid3, tid4, tid5, tid6;
+	    	 int file1=1;
+	    	 int file2=2;
+	  	 int *p=&file1;
+	    	 int *q=&file2;
+		 
+- Lalu kami membuat 2 thread yang berguna untuk memasukan ps -aux kedalam 2 file tersebut
+		
+    	int a = pthread_create( &tid1, NULL, masukinaux, (void*) p);
+   	if(a!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",a);
+			exit(EXIT_FAILURE);
+	}
+	
+    	int d = pthread_create( &tid4, NULL, masukinaux, (void*) q);
+    	if(d!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",d);
+			exit(EXIT_FAILURE);
+	}
+	
+    	pthread_join(tid1, NULL);
+		
+- Kami juga membuat 2 thread yang berguna nantinya untuk menzipkan dan menghapus file tersebut
+
+	  int b = pthread_create( &tid2, NULL, rubahzip, (void*) p);
+   	  if(b!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",b);
+			exit(EXIT_FAILURE);
+	  }
+    	  int e = pthread_create( &tid5, NULL, rubahzip, (void*) q);
+    	  if(e!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",e);
+			exit(EXIT_FAILURE);
+	  }
+    	  pthread_join(tid2, NULL);
+	  
+- Setelah itu kita juga membuat 2 thread yang berguna nantinya untuk mengunzip file tersebut
+
+	  int c = pthread_create( &tid3, NULL, rubahfile, (void*) p);
+    	  if(c!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",c);
+			exit(EXIT_FAILURE);
+	  }
+   	  int f = pthread_create( &tid6, NULL, rubahfile, (void*) q);
+    	  if(f!=0){
+			fprintf(stderr,"Error - pthread_create() return code: %d\n",f);
+			exit(EXIT_FAILURE);
+	  }
+    	  pthread_join(tid6, NULL);
+	 
+- Lalu pada fungsi masukinaux kami membuat if dan else if dimana if ditujukan untuk file SimpanProses1.txt sedangkan else if ditujukan kepada file SimpanProses2.txt
+
+	  if(file ==1)
+    	  {
+	   	 status++; //sebagai penghitung plus 1
+		 while(status!=2); //untuk menunggu agar status=2 sehingga bisa dijalankan bersama-sama
+        	 system("ps -aux | head -11 > /home/thalutn5/Documents/modul3/soal4/FolderProses1/SimpanProses1.txt");
+		 //mengambil ps -aux sebanyak 10 baris lalu disimpan di file SimpanProses1.txt
+    	  }
+    	  else if(file == 2)
+     	  {
+		status++; //sebagai penghitung plus 1
+		while(status!=2); //untuk menunggu agar status=2 sehingga bisa dijalankan bersama-sama
+        	system("ps -aux | head -11 > /home/thalutn5/Documents/modul3/soal4/FolderProses2/SimpanProses2.txt");
+		//mengambil ps -aux sebanyak 10 baris lalu disimpan di file SimpanProses2.txt
+     	  } //maka status = 2
+
+- Setelah itu pada fungsi rubahzip kami membuat if dan else if dimana if ditujukan untuk file SimpanProses1.txt sedangkan else if ditujukan kepada file SimpanProses2.txt
+
+	  int file=*((int*)temp);
+    	  if(file ==1)
+    	  {
+		 status++; //sebagai penghitung plus 1
+		 while(status!=4); //untuk menunggu agar status=4 sehingga bisa dijalankan bersama-sama
+        	 system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses1/; zip KompresProses1.zip SimpanProses1.txt");
+		 //mengekstrak SimpanProses1.txt
+		 remove("/home/thalutn5/Documents/modul3/soal4/FolderProses1/SimpanProses1.txt");
+		 //mendelete SimpanProses1.txt
+    	  }
+    	  else if(file == 2)
+    	  {
+		 status++; //sebagai penghitung plus 1
+	 	 while(status!=4); //untuk menunggu agar status=4 sehingga bisa dijalankan bersama-sama
+        	 system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses2/; zip KompresProses2.zip SimpanProses2.txt");
+		  //mengekstrak SimpanProses2.txt
+		 remove("/home/thalutn5/Documents/modul3/soal4/FolderProses2/SimpanProses2.txt");
+		 //mendelete SimpanProses2.txt
+    	  }
+	
+- Dan yang terakhir adalah fungsi rubahfile
+
+    	  if(file ==1)
+    	  {
+		status++; //sebagai penghitung plus 1
+		while(status!=6);  //untuk menunggu agar status=6 sehingga bisa dijalankan bersama-sama
+		sleep(15); //disleep agar menjalankan unzip 15 detik setelah mengektrak file tadi
+        	system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses1/; unzip KompresProses1.zip");//mengunzip file .zip tadi
+    	  }
+    	  else if(file == 2)
+    	  {
+		status++; //sebagai penghitung plus 1
+		while(status!=6);  //untuk menunggu agar status=6 sehingga bisa dijalankan bersama-sama
+		sleep(15); //disleep agar menjalankan unzip 15 detik setelah mengektrak file tadi
+        	system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses2/; unzip KompresProses2.zip");//mengunzip file .zip tadi
+    	  }
+	  
+# Nomor 5
 
 
 
