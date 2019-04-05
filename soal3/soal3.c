@@ -16,13 +16,15 @@ void *bangunmal(){
 		if(trigger == 1)
 		{
 			WakeUp_Status = WakeUp_Status + 15;
+			//printf("WakeUP_Status + 15\n");
 			counter++;
 			trigger = 0;
 		}
 		if(counter2 == 3)
 			{
-				printf("Fitur Agmal Ayo Bangun Disabled 10 s\n");
+				printf("Fitur Agmal Ayo Bangun Disabled 10 s\n");		
 				sleep(10);
+				trigger=0;
 				counter2=0;
 			}
 	}
@@ -34,6 +36,7 @@ void *tidurraj(){
 		if(trigger2 == 1)
 		{
 			Spirit_Status = Spirit_Status - 20;
+			//printf("Spirit_Status - 20\n");
 			counter2++;
 			trigger2 = 0;
 		}
@@ -41,6 +44,7 @@ void *tidurraj(){
 		{
 			printf("Fitur Iraj Ayo Tidur Disabled 10 s\n");
 			sleep(10);
+			trigger2=0;
 			counter=0;
 		}
 	}
