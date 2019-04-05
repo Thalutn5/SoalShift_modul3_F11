@@ -96,6 +96,139 @@ h. Menggunakan thread, socket, shared memory
 
 Jawab :
 
+# Pada Penjual
+
+- Pertama-tama kami mengopas template server lalu kita membuat variabel global yang bernama stok
+
+	  int *stok;
+	 
+- Setelah itu di dalam fungsi utama kita membuat varibel char dan membuat variabel thread
+
+	  pthread_t tid;
+	  pthread_create(&tid, NULL, &printstok, &stok);
+	  char tambah[256];
+	 
+- Kita juga mengisikan isi dari varabel stok dengan angka 3
+
+	  *stok = 3;
+	  
+	  
+- Kita juga perlu menggunakan shared memory pada kodingan ini agar isi dari variabel stok sama dengan variabel stok pada pembeli
+
+	  key_t key = 1234;
+          int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+          stok = shmat(shmid, NULL, 0);
+
+- Lalu kita mereset memory pada variabel tambah agar isinya tidak tersangkut pada itu itu saja
+
+	  memset(tambah,0,sizeof(tambah));
+	 
+- Lalu kita membuat looping dengan syarat varlread tidak sama dengan 0 maka jika string yang diinputkan pada client1 adalah "tambah" maka stok akan bertambah 1 serta tidak lupa untuk mereset memory pada variabel tambah agar isinya tidak tersangkut pada itu itu saja
+
+    	  while((valread = read(new_socket, tambah, 255)) != 0){
+	  if(strcmp(tambah, "tambah")==0)
+	  {*stok=*stok+1;;}
+	   memset(tambah,0,sizeof(tambah));
+	 
+- Isi dari fungsi printstok adalah kita membuat looping yang mengeluarkan sebuah output yang berisi isi stok selama kurun waktu 5 detik
+
+	  while(1){	
+		printf("Stok yang tersedia adalah %d\n", *stok);
+		sleep(5);
+	  }
+- Kita juga perlu menambahkan bagian akhir pada shared memory pada bagian akhir fungsi utama
+
+	  shmdt(stok);
+          shmctl(shmid, IPC_RMID, NULL);
+
+# Pada Pembeli
+
+- Hampir sama dengan penjual, Pertama-tama kami mengopas template server lalu kita membuat variabel global yang bernama stok
+
+	  int *stok;
+	 
+- Setelah itu di dalam fungsi utama kita membuat varibel char dan membuat variabel thread
+
+	  pthread_t tid;
+	  pthread_create(&tid, NULL, &printstok, &stok);
+	  char beli[256];
+	  
+- Kita juga mengisikan isi dari varabel stok dengan angka 3
+
+	  *stok = 3;
+	  
+- Kita juga perlu menggunakan shared memory pada kodingan ini agar isi dari variabel stok sama dengan variabel stok pada pembeli
+
+	  key_t key = 1234;
+          int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+          stok = shmat(shmid, NULL, 0);
+
+- Lalu kita mereset memory pada variabel tambah agar isinya tidak tersangkut pada itu itu saja
+
+	  memset(tambah,0,sizeof(tambah));
+
+- Kami juga membuat 2 variabel char pointer yang menampung "transaksi berhasil" dan "transaksi gagal"
+    
+    	  char *hello1 = "transaksi berhasil\n";
+    	  char *hello2 = "transaksi gagal\n";
+	
+- Lalu kita mereset memory pada variabel beli agar isinya tidak tersangkut pada itu itu saja
+
+    	memset(beli,0,sizeof(beli));
+    
+- Lalu kita membuat looping dengan syarat varlread tidak sama dengan 0 maka jika string yang diinputkan pada client2 adalah "beli" maka stok akan berkurang 1 serta jika stok tidak sama dengan nol maka dia akan mengirimkan pesan kepada client2 dengan tulisan transaksi berhasil. Jika stok sama dengan nol maka akan mengiimkan pesan transaksi gagal. Tidak lupa juga untuk mereset memory pada variabel beli agar isinya tidak tersangkut pada itu itu saja
+
+    	while((valread = read(new_socket, beli, 255)) != 0){
+		if(*stok!=0){
+			if(strcmp(beli, "beli")==0)
+			{*stok=*stok-1;}
+			//printf("transaksi berhasil\n");
+			send(new_socket, hello1,strlen(hello1),0);
+		}
+		else{
+			//printf("transaksi gagal\n");
+			send(new_socket, hello2,strlen(hello2),0);
+		}
+		memset(beli,0,sizeof(beli));
+   	}
+- Kita juga perlu menambahkan bagian akhir pada shared memory pada bagian akhir fungsi utama	
+
+      shmdt(stok);
+      shmctl(shmid, IPC_RMID, NULL);	
+   
+ # Pada Client1
+ 
+ - Setelah kita mengcopas tempalte client kita tinggal menambahkan beberapa syntax
+ - Kita membuat ebuah variabel char bernama tambah
+ 
+       char tambah[256];
+    
+ - Lalu kita membuat looping dimana isinya adalah menginputkan suatu string dan mengirim string tadi menuju Penjual
+       
+       while(1){
+	   scanf("%s", tambah);//menginputkan sebuah variabel
+	   send(sock, tambah, strlen(tambah),0);;//mengirim pesan isi dari string yg diinputkan
+	   memset(tambah,0,sizeof(tambah));//seperti sebelumnya yaitu mereset variabel tambah
+       }
+       
+ # Pada Client2
+	
+ - Setelah kita mengcopas tempalte client kita tinggal menambahkan beberapa syntax
+ - Kita membuat ebuah variabel char bernama beli
+ 
+       char beli[256];
+       
+ - Lalu kita membuat looping dimana isinya adalah menginputkan suatu string dan mengirim string tadi menuju Pembeli
+ 
+       while(1){
+	   scanf("%s", beli);//menginputkan sebuah variabel
+	   send(sock, beli, strlen(beli),0);//mengirim pesan isi dari string yg diinputkan
+	   valread = read(sock, buffer,1024);//menerima pesan
+	   printf("%s", buffer);//mengeluarkan sebuah output berupa transaksi gagal/berhasil
+	   memset(buffer,0,sizeof(buffer));//seperti sebelumnya yaitu mereset variabel buffer 
+	   memset(beli,0,sizeof(beli));//seperti sebelumnya yaitu mereset variabel beli
+      }
+
 # Nomor 3
 Agmal dan Iraj merupakan 2 sahabat yang sedang kuliah dan hidup satu kostan, sayangnya mereka mempunyai gaya hidup yang berkebalikan, dimana Iraj merupakan laki-laki yang sangat sehat,rajin berolahraga dan bangun tidak pernah kesiangan sedangkan Agmal hampir menghabiskan setengah umur hidupnya hanya untuk tidur dan ‘ngoding’. Dikarenakan mereka sahabat yang baik, Agmal dan iraj sama-sama ingin membuat satu sama lain mengikuti gaya hidup mereka dengan cara membuat Iraj sering tidur seperti Agmal, atau membuat Agmal selalu bangun pagi seperti Iraj. Buatlah suatu program C untuk menggambarkan kehidupan mereka dengan spesifikasi sebagai berikut:
 
@@ -210,6 +343,10 @@ Jawab :
 
 		pthread_join(tid[0],NULL);
 		pthread_join(tid[1],NULL);
+		
+- Kesusahan pada soal ini adalah kurang telitinya jalan pada kodingan ini sehingga menimbulkan beberapa error dan yang tadi saat salah satu antara fitur 2 dan 3 dijalanan 3 kali maka salah satu dari mereka berdua akan disabled selama 10 detik, saya sempet mengalami error dimana yang saya buat itu tidak mendisabled salah satu fiturnya melainkan hanya menunda saja, untuk masalah ini saya mengisikan isi dari variabel trigger dan trigger2 dengan angka 0 pada if kedua di kedua fungsi setelah sleep 10.
+
+
 # Nomor 4
 Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
 Dengan Syarat : 
