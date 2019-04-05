@@ -46,7 +46,7 @@ Jawab :
 
 		pthread_t tid[256];
 		
-- Kita juga membuat looping lagi sebanyak nilai yang kita inputkan, untuk mendapatkan nilai dari faktorial suatu angka tersebut dengan mempasing isi dari variabel angka tadi
+- Kita juga membuat looping lagi sebanyak nilai yang kita inputkan, untuk mendapatkan nilai dari faktorial suatu angka tersebut dengan mempasing isi dari variabel angka tadi dengan membuat thread dan menjoinkannya
 
 		for(i = 0; i < argc - 1; i++){
 			pthread_create(&tid[i], NULL, faktorial, (void*)&angka[i]);
@@ -116,4 +116,65 @@ b. Kedua karakter memiliki status yang unik
 		+ WakeUp_Status Agmal >= 100 (Tampilkan Pesan “Agmal Terbangun,mereka bangun pagi dan berolahraga”)
 		+ Spirit_Status Iraj <= 0 (Tampilkan Pesan “Iraj ikut tidur, dan bangun kesiangan bersama Agmal”)
 	- Syarat Menggunakan Lebih dari 1 Thread
-	
+Jawab :
+ - Pertama-tama kami membuat sebuah variabel global untuk mempasing sebuah nilai nantinya 
+ 
+		int WakeUp_Status;
+		int Spirit_Status;
+		int counter;
+		int counter2;
+		int trigger;
+		int trigger2;
+- Lalu didalam fungsi utama kita mendeklarasikan variabel i dan fitur. Serta mendeklarasikan isi dari variabel WakeUp_Status dan Spirit status. Kami juga membuat sebuah 2 thread dengan nama bangunmal dan tidurraj
+
+		int i, fitur;
+		WakeUp_Status=0;
+		Spirit_Status=100;
+		pthread_t tid[256];
+		pthread_create(&tid[0], NULL, &bangunmal, NULL);
+		pthread_create(&tid[1], NULL, &tidurraj, NULL);
+		
+- Setelah kami membuat looping dengan while selama ia bernilai true maka ia akan terus looping
+- Isi dari looping tersebut mengecek apakah WakeUp_Status itu lebih besar sama dengan 100 atau tidak dan mengecek apakah Spirit_Status itu kurang dari sama dengan 0, kalo ya maka masuk kedalam if dan else if tersebut
+
+		if(WakeUp_Status >= 100)
+		{
+			printf("Agmal Terbangun, mereka bangun pagi dan berolahraga\n");
+			exit(0);
+		}
+		else if(Spirit_Status <= 0)
+		{
+			printf("Iraj ikut tidur, dan bangun kesiangan bersama agmal\n");
+			exit(0);
+		}
+- Jika tidak masuk kedalam if dan else if tersebut maka akan memasuki else dimana isinya adalah pilihan-pilihan fitur yang harus kita pilih
+
+			printf("Pilihlah Fitur-fitur dibawah ini :\n");
+			printf("1. All Status \n");
+			printf("2. Agmal Ayo Bangun \n");
+			printf("3. Iraj Ayo Tidur \n");
+			printf("Masukkan Pilihan fitur : \n");
+			scanf("%d", &fitur);
+			
+- Setelah kita menginputkan 1 pada scanf diatas maka akan memasuki if dimana dia akan ngeprint isi dari variabel WakeUp_Status dan Spirit_Status
+
+			if(fitur == 1)
+			{
+				printf("WakeUp_Status = %d \n", WakeUp_Status);
+				printf("Spirit_Status = %d \n\n", Spirit_Status);
+			}	
+- Dan misalnya yang dipilih adalah 2 dan 3 maka dia akan menset isi dari variabel trigger dan trigger2 menjadi 1 serta mensleep selama 0.5 detik.
+
+			if(fitur == 2)
+			{
+				trigger = 1;
+				usleep(500);
+			}	
+			else if(fitur == 3)
+			{
+				trigger2 = 1;
+				usleep(500);
+			}
+- Didalam fungsi Bangunmal
+
+
