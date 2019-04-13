@@ -571,4 +571,4 @@ Pada kodingan ini kami mengopaskan template dari shared memory dan mengganti gan
 			}
 		    }
 		  
-
+Kesusahan pada pengerjaan soal ini adalah soalnya banyak, jadi agak pusing ngeliatnya kalo ga ditulis ulang. Lalu sering terjadinya kesalahan dalam berfikir mana yang harus dilakukan mana yang selanjutnya dilakukan. Untuk menyelesaikan permasalahn tadi lebih fokus aja sih dalam berfikir agar tidak membuang-buang waktu pengerjaan.
