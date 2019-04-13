@@ -470,7 +470,105 @@ Jawab :
         	system("cd /home/thalutn5/Documents/modul3/soal4/FolderProses2/; unzip KompresProses2.zip");//mengunzip file .zip tadi
     	  }
 	  
-# Nomor 5
+# Nomor 5 
 
+Seperti dengan yang ada di soal, untuk mengerjakan nomor 5 kami menggunakan 2 kodingan. yang 1 sebagai kodingan utama sedangkan yang kedua sebagai shop
 
+# Pada Kodingan soal5.c
+
+- Pertama-tama kami membuat struct yang bernama monster yang berisikan monsterName, monsterHunger, monsterHealth, monsterHygiene, monsterFoodstock, dan monsterBathTimer. Selain itu kami juga membuat variabel global yang bernama monsterMaxHunger dengan isinya 200, monsterMaxhygiene dengan isinya 100, monsterMaxHealth 300 dan enemyHealth 100. Kita juga membuat variabel bernama gameState, gameOver, *foodStock, dan inputTemp.
+
+		struct monster
+		{
+		    char monsterName[100];
+		    int monsterHunger;
+		    int monsterHealth;
+		    int monsterHygiene;
+		    int monsterFoodStock;
+		    int monsterBathTimer;
+		};
+
+		struct monster *monstat;
+
+		int monsterMaxHunger = 200;
+		int monsterMaxHygiene = 100;
+		int monsterMaxHealth = 300;
+		int enemyHealth = 100;
+
+		int gameState;
+		int gameOver;
+		int *foodStock;
+		char inputTemp;
+		
+- Setelah itu kami menggunakan fungsi *render yang berguna untuk menginputkan suatu angka tanpa perlu mengetikkan enter
+- Ada fungsi Hunger yang berfungsi untuk mengurangi poin hunger sebanyak 5 selama 5 detik
+- Yang kedua ada fungsi hygiene yang berfungsi untuk mengurangi pion hygiene 10 setiap 30 detik
+- Yang ketiga ada fungsi bath yang berfungsi sebagai timer dalam monsterBathTimer
+- Dan yang terakhir ada fungsi regen yang berfungsi untuk menambah heatlh monster kita sebanyak 5 poin selama 10 detik
+- Disini kami menggunakan shared memory pada variabel stok makanannya, lalu membuat thread tid1 sampai tid7. Lalu memasukkan variabel monterHealth, monsterHunger, dan monsterHygiene dengan maksimalnya. 
+
+		key_t key = 4242;
+		    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0777);
+		    foodStock = shmat(shmid, NULL, 0);
+
+		    gameState = 0;
+		    gameOver = 0;
+
+		    pthread_t tid1, tid2, tid3, tid4, tid5, tid6, tid7;
+		    monstat = malloc(sizeof(struct monster));
+
+		    monstat->monsterHealth = monsterMaxHealth;
+		    monstat->monsterHunger = monsterMaxHunger;
+		    monstat->monsterHygiene = monsterMaxHygiene;
+
+- Lalu kita menginputkan nama monsternya
+
+		    system("clear");
+		    printf("Enter your desired name for your monster (1 word pls) : \n");
+		    scanf("%s", monstat->monsterName);
+
+		    printf("Great! your monster's name is %s \n", monstat->monsterName);
+		    sleep(3);
+
+		    system("clear");
+		    
+- Kita membuat while, dan jika gamestate=0 maka pada if pertama jika kita menginputkan angka 1 maka monster kita akan makan, selama makanan(Foodstock) kita masih tersedia. 
+- Pada else if, jika kita menginputkan angka 2 maka monster kita akan mandi dan menambahkan isi dari variabel monsterHygiene dan tidak bisa menjalankannya lagi selama 20 detik
+- Pada else if yang kedua, jika menginputkan angka 3 maka akan memasuki fase battle dan menggantikan isi dari variabel gamestate menjadi 1
+- Pada else if yang ketiga, jika kita menginputkan angka 4 maka memasuki shop untuk menaikkan foodstock 
+- Pada else if yang terakhir, jika kita  menginputkan angka 5 maka kita akan keluar dari game
+- Jika Gamestate=1 maka mnster kita akan memasuki battle dimana kita bisa menyerang musuh atau kabur dari battle
+- dan jika Gamestate=2 maka monster kita akan memasuki toko yang berguna untuk menambah foodstok dan keluar dari toko
+- Dan tdak lupa untuk menggunakan shared memory pada variabel foodstock
+- pada fungsi render yang kedua berfungsi untuk menampilkan printf-printf yang mengeluarkan output berupa fitur-fitur yang diinginkan
+
+# Pada Kodingan soal5_shop.c
+
+Pada kodingan ini kami mengopaskan template dari shared memory dan mengganti gantinya sedikit.
+- Pada fungsi utamanya kami membuat sebuah fungsi yang bernama render yang bertujuan untuk mengeluarkan fitur-fitur yang tersedia pada shop.
+
+		void *renderFunction(){
+		    while(1){
+			printf("FoodShop\n");
+			printf("Food stock : %d\n", *foodStock);
+			printf("Choices\n1. Restock\n2. Exit\n");
+			sleep(1);
+			system("clear");
+		    }
+		}
+
+- Lalu kami membuat suatu while dimana jika kita menginputkan angka 1 maka foodstock akan bertambah 1 dan jika kita menginputkan angka 2 maka program akan dihentikkan
+
+		    while(gameOver != 1){
+			inputTemp = getch();
+			if(inputTemp == '1'){
+			    system("clear");
+			    printf("added one food to the stock!\n");
+			    *foodStock += 1;
+			}
+			else if(inputTemp == '2'){
+			    gameOver = 1;
+			}
+		    }
+		  
 
